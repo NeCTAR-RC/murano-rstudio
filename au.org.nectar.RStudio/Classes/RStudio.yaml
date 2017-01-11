@@ -38,7 +38,7 @@ Methods:
     Body:
       - If: not $.getAttr(deployed, false)
         Then:
-          - $._environment.reporter.report($this, 'Creating VM')
+          - $._environment.reporter.report($this, 'Creating R-Studio instance...')
           - $securityGroupIngress:
             - ToPort: 80
               FromPort: 80
@@ -48,7 +48,7 @@ Methods:
           - $.instance.deploy()
           - $resources: new(sys:Resources)
           - $template: $resources.yaml('setup.template').bind(dict(username => $.username, password => $.password))
-          - $._environment.reporter.report($this, 'Instance is created. Configuring R-Studio user account...')
+          - $._environment.reporter.report($this, 'Instance created. Setting up R-Studio...')
           - $.instance.agent.call($template, $resources)
           - $._environment.reporter.report($this, format('R-Studio is available at http://{0}', $.instance.ipAddresses.first()))
           - $.setAttr(deployed, true)

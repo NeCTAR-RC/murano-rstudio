@@ -11,6 +11,12 @@ clean:
 upload: $(TARGET).zip
 	murano package-import -c "Big Data" --package-version 1.0 --exists-action u $(TARGET).zip
 
+public:
+	@echo "Searching for $(TARGET) package ID..."
+	@package_id=$$(murano package-list --fqn $(TARGET) | grep $(TARGET) | awk '{print $$2}'); \
+	echo "Found ID: $$package_id"; \
+	murano package-update --is-public true $$package_id
+
 update-image-id:
 	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 16.04 LTS Xenial)..."
 	@image_id=$$(openstack image list --limit 100 --long -f value -c ID -c Project --property "name=NeCTAR R-Studio (Ubuntu 16.04 LTS Xenial)" --sort created_at | tail -n1 | cut -d" " -f1); \

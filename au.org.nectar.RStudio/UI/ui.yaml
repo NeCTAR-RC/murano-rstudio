@@ -40,8 +40,6 @@ Forms:
           description: >-
             Select registered in Openstack flavor. Consider that application performance
             depends on this parameter.
-          requirements:
-            min_disk: 30
           required: false
         - name: keyPair
           type: keypair
