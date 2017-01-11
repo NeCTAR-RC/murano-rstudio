@@ -1,0 +1,26 @@
+#  Licensed under the Apache License, Version 2.0 (the "License"); you may
+#  not use this file except in compliance with the License. You may obtain
+#  a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#  License for the specific language governing permissions and limitations
+#  under the License.
+
+Format: 1.0
+Type: Application
+FullName: au.org.nectar.RStudio
+Name: R-Studio
+Description: |
+  R-Studio is an integrated development environment (IDE) for R.
+  This package requires an existing Cinder volume before launching, which
+  all user data will be retained on.
+  See https://website for more information.
+Author: NeCTAR
+Tags: 
+  - BigData
+Classes:
+ au.org.nectar.RStudio: RStudio.yaml
