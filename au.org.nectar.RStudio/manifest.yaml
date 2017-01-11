@@ -16,9 +16,10 @@ FullName: au.org.nectar.RStudio
 Name: R-Studio
 Description: |
   R-Studio is an integrated development environment (IDE) for R.
+  Please read the important information about this package at
+  https://support.ehelp.edu.au/support/solutions/articles/6000164849-nectar-r-studio
   This package requires an existing Cinder volume before launching, which
   all user data will be retained on.
-  See https://website for more information.
 Author: NeCTAR
 Tags: 
   - BigData
