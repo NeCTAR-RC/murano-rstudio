@@ -18,10 +18,11 @@ Description: |
   R-Studio is an integrated development environment (IDE) for R.
   Please read the important information about this package at
   https://support.ehelp.edu.au/support/solutions/articles/6000164849-nectar-r-studio
-  This package requires an existing Cinder volume before launching, which
-  all user data will be retained on.
+  An existing volume ID can be provided for storage of all user data, which
+  will be retained, even if this application is deleted. This is recommended
+  for extra storage space and data security.
 Author: NeCTAR
-Tags: 
+Tags:
   - BigData
 Classes:
  au.org.nectar.RStudio: RStudio.yaml

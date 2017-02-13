@@ -12,6 +12,13 @@
 
 Version: 2.2
 
+Templates:
+  customVolumeAttachment:
+    '/dev/vdb':
+      ?:
+        type: io.murano.resources.ExistingCinderVolume
+      openstackId: $.volumeConfiguration.volumeID
+
 Application:
   ?:
     type: au.org.nectar.RStudio
@@ -24,12 +31,8 @@ Application:
     flavor: $.instanceConfiguration.flavor
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
+    volumes: switch($.volumeConfiguration.volumeID, $=''=>null, $!=null=>$customVolumeAttachment)
     image: 5f4c1b59-a311-4f21-8cd2-0b7e3a94cf4d
-    volumes:
-      '/dev/vdh':
-        ?:
-          type: io.murano.resources.ExistingCinderVolume
-        openstackId: $.volumeConfiguration.volumeID
 
 Forms:
   - instanceConfiguration:
@@ -38,20 +41,24 @@ Forms:
           type: flavor
           label: Instance flavor
           description: >-
-            Select registered in Openstack flavor. Consider that application performance
-            depends on this parameter.
+            Select your desired flavor. Consider that application performance
+            will be affected by your choice.
           required: false
         - name: keyPair
           type: keypair
           label: Key pair
           description: >-
-            Select the Keypair to control access to instances. You can login to
-            instances using this Keypair after the deployment has completed.
+            Select the keypair to control access to instances. You can login
+            to the instance using SSH with this keypair after the deployment
+            has completed.
           required: false
         - name: availabilityZone
           type: azone
           label: Availability zone
-          description: Select availability zone where the application would be installed.
+          description: >-
+            Select availability zone where the application would be created.
+            If you plan to use a volume for your data, this will need match
+            the Availability Zone of the volume.
           required: false
         - name: unitNamingPattern
           label: Hostname
@@ -62,29 +69,35 @@ Forms:
       fields:
         - name: volumeID
           type: string
-          label: Existing Cinder Volume ID
-          description: Enter an existing Cinder Volume ID
-          required: true
+          label: Existing Volume ID
+          description: >-
+            It is recommended to provide the ID of a pre-existing volume for
+            the data storage of this application.
+            If provided, all user data will be stored on this volume and will
+            persist even if the application is deleted.
+          required: false
   - userConfiguration:
       fields:
         - name: title
           type: string
           required: false
           hidden: true
-          descriptionTitle: R-Studio Configuration
-          description: Specify the properties of your R-Studio application
+          descriptionTitle: User account configuration
+          description: >-
+            Details provided here will configure the user account for
+            application. You will be prompted for these when you start.
         - name: username
           type: string
           label: Username
           descriptionTitle: Username
           description: >-
-            Please, provide a username. A user account with be created with
-            this username.
+            Provide a username for the new user account.
+            A user account with be created with this username.
         - name: password
           type: password
           label: Password
           descriptionTitle: Password
           description: >-
-            Please, provide password for the application.
+            Provide password for the new user account.
             Your password should have at least 7 characters, 1 capital letter,
             1 digit and 1 specical character
