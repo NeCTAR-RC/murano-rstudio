@@ -7,7 +7,12 @@ ORIGUSER="ubuntu"
 # except /dev/vda which is our root disk
 DISK=$(ls /dev/vd[b-z] | tail -n1)
 
-if [ ! -z $DISK ]; then
+# Check if the disk is mounted (e.g. if ephemeral)
+MOUNTPOINT=$(lsblk -n $DISK -o MOUNTPOINT)
+
+# If we have a disk, but it's not mounted
+if [ ! -z $DISK ] && [ -z $MOUNTPOINT ]; then
+
   # Have external mount for /home
   MOUNT="/mnt/home"
 
