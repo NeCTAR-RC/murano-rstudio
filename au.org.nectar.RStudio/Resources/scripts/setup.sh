@@ -14,7 +14,7 @@ MOUNTPOINT=$(lsblk -n $DISK -o MOUNTPOINT)
 if [ ! -z $DISK ] && [ -z $MOUNTPOINT ]; then
 
   # Have external mount for /home
-  MOUNT="/mnt/home"
+  MOUNT="/homevol"
 
   # Partition label
   if [ "$(lsblk -n -o PARTTYPE $DISK)" == "" ]; then
