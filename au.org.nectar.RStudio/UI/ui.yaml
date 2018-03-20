@@ -32,7 +32,7 @@ Application:
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
     volumes: switch($.volumeConfiguration.volumeID, $=''=>null, $!=null=>$customVolumeAttachment)
-    image: 5f4c1b59-a311-4f21-8cd2-0b7e3a94cf4d
+    image: 8732d23d-444b-4ce7-b7c2-91d6270aa133
 
 Forms:
   - instanceConfiguration:

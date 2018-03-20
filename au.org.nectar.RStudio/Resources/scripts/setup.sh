@@ -10,7 +10,8 @@ DISK=$(ls /dev/vd[b-z] | tail -n1)
 # Check if the disk is mounted (e.g. if ephemeral)
 MOUNTPOINT=$(lsblk -n $DISK -o MOUNTPOINT)
 
-# If we have a disk, but it's not mounted
+# If we have a disk, but it's not mounted, then it's probably
+# our external volume for home
 if [ ! -z $DISK ] && [ -z $MOUNTPOINT ]; then
 
   # Have external mount for /home
@@ -38,32 +39,25 @@ if [ ! -z $DISK ] && [ -z $MOUNTPOINT ]; then
     mount $MOUNT
   fi
 else
-  # Use regular /home
+  # Use regular /home if no volume is found
   MOUNT="/home"
 fi
 
-
-if ! id $USERNAME >/dev/null 2>&1; then
-  useradd -d $MOUNT/$USERNAME -s /bin/bash -M -g users -G adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev $USERNAME
-fi
-
 if [ "$USERNAME" != "$ORIGUSER" ]; then
-  if [ ! -d $MOUNT/$USERNAME ]; then
-    cp -r /home/$ORIGUSER $MOUNT/$USERNAME
-    chown -R $USERNAME:users $MOUNT/$USERNAME
-  fi
+  # Rename the user
+  usermod --login $USERNAME $ORIGUSER
+  # Set and move home dir to new location, and make 'users' the primary group
+  usermod --home $MOUNT/$USERNAME --move-home --gid users --comment $USERNAME $USERNAME
 
-  # Replace cloud user
+  # Replace cloud user in cloud-init
   sed -i -e "s/name: $ORIGUSER/name: $USERNAME/g" -e "s/gecos: .*/gecos: $USERNAME/g" /etc/cloud/cloud.cfg
   sed -i "s/$ORIGUSER/$USERNAME/g" /etc/sudoers.d/90-cloud-init-users
 fi
 
-# Set password for user
 set +x
+# Set password for user (and don't log it)
 PASSWORD="$2"
 echo "${USERNAME}:${PASSWORD}" | chpasswd
+# Nuke the password from the murano log file
+sed -i "s/${PASSWORD}/******/g" /var/log/murano-agent.log
 set -x
-
-if [ "$USERNAME" != "$ORIGUSER" ]; then
-  userdel -rf $ORIGUSER || true
-fi
