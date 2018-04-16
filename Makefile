@@ -24,7 +24,13 @@ update-image-id:
 		echo "Image ID not found"; exit 1; \
 	fi; \
 	echo "Found ID: $$image_id"; \
-	sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml
+	eval $$(openstack image show $$image_id -f value -c properties); \
+	if [ -z "$$rstudio_version" ]; then \
+		echo "R-Studio version not found"; exit 1; \
+	fi; \
+	echo "Found R-Studio version: $$rstudio_version"; \
+	sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml; \
+	sed -i "s/^Name:.*/Name: R-Studio v$$rstudio_version/g" $(TARGET)/manifest.yaml
 
 $(TARGET).zip:
 	rm -f $@; cd $(TARGET); zip ../$@ -r *; cd ..

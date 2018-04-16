@@ -13,7 +13,7 @@
 Format: 1.0
 Type: Application
 FullName: au.org.nectar.RStudio
-Name: R-Studio
+Name: R-Studio v1.1.442
 Description: |
   R-Studio is an integrated development environment (IDE) for R.
   Please read the important information about this package at
