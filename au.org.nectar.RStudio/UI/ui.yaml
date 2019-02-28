@@ -10,7 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-Version: 2.2
+Version: 2.4
 
 Templates:
   customVolumeAttachment:
@@ -27,12 +27,17 @@ Application:
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
-    name: generateHostname($.instanceConfiguration.unitNamingPattern, 1)
+    name: $.instanceConfiguration.instname
     flavor: $.instanceConfiguration.flavor
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
     volumes: switch($.volumeConfiguration.volumeID, $=''=>null, $!=null=>$customVolumeAttachment)
     image: cff362be-43ec-456b-8ee6-64ac9e32d5e0
+  recordSet:
+    ?:
+      type: io.murano.resources.RecordSet
+    zone: $.recordSetConfiguration.zone
+    name: $.recordSetConfiguration.hostname
 
 Forms:
   - instanceConfiguration:
@@ -60,11 +65,46 @@ Forms:
             If you plan to use a volume for your data, this will need match
             the Availability Zone of the volume.
           required: false
-        - name: unitNamingPattern
-          label: Hostname
+        - name: instname
           type: string
-          description: An optional host name.
+          label: Instance hostname
+          required: true
+          maxLength: 64
+          regexpValidator: '^[a-zA-z][-_\w]*$'
+          errorMessages:
+            invalid: Just letters, numbers, underscores and hyphens are allowed.
+          helpText: Just letters, numbers, underscores and hyphens are allowed.
+          description: >-
+            Specify a string, that will be used in instance hostname.
+            Just A-Z, a-z, 0-9, dash and underline are allowed.
+          initial: generateHostname('',1)
+  - recordSetConfiguration:
+      fields:
+        - name: license
+          type: string
+          description: Apache License, Version 2.0
+          hidden: true
           required: false
+        - name: zone
+          type: zone
+          label: DNS zone
+          description: >-
+            Select DNS zone if you'd like a DNS entry created for you.
+            Please note that a free Let's Encrypt HTTPS certificate will be
+            provisioned for you automatically if you do choose a zone.
+          required: false
+        - name: hostname
+          type: string
+          label: DNS hostname
+          regexpValidator: '^[a-z][a-z0-9-]*$'
+          errorMessages:
+            invalid: Just lower-case letters, numbers and hyphens are allowed.
+          helpText: Just lower-case letters, numbers and hyphens are allowed.
+          description: >-
+            Specify the DNS hostname for the instance. The fully qualified
+            domain name will be of the form [hostname].[zone].
+          required: false
+          initial: $.instanceConfiguration.instname.replace('_','-').toLower()
   - volumeConfiguration:
       fields:
         - name: volumeID
