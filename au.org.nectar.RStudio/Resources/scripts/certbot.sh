@@ -9,8 +9,8 @@ KEY="${LETS_ENCRYPT_LIVE}/${FQDN}/privkey.pem"
 CRT="${LETS_ENCRYPT_LIVE}/${FQDN}/cert.pem"
 
 # use test cert option when testing package
-# CERTBOT_ARGS=""
-CERTBOT_ARGS="--test-cert"
+CERTBOT_ARGS=""
+#CERTBOT_ARGS="-test-cert"
 
 # change ningx server_name from _ to fqdn
 sed -i 's/^\([ \t]\+server_name[ \t]\+\)_\([ \t]*;[ \t]*\)$/\1'$FQDN'\2/' \

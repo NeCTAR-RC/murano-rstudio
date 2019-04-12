@@ -17,7 +17,7 @@ Templates:
     '/dev/vdb':
       ?:
         type: io.murano.resources.ExistingCinderVolume
-      openstackId: $.volumeConfiguration.volumeID
+      openstackId: $.volumeConfiguration.volume
 
 Application:
   ?:
@@ -27,17 +27,17 @@ Application:
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
-    name: $.instanceConfiguration.instname
+    name: generateHostname($.recordSetConfiguration.unitNamingPattern, 1)
     flavor: $.instanceConfiguration.flavor
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
-    volumes: switch($.volumeConfiguration.volumeID, $=''=>null, $!=null=>$customVolumeAttachment)
-    image: cff362be-43ec-456b-8ee6-64ac9e32d5e0
+    volumes: switch($.volumeConfiguration.volume, $=''=>null, $!=null=>$customVolumeAttachment)
+    image: 7e5628b6-fde6-49c4-a10c-253f81115a03
   recordSet:
     ?:
       type: io.murano.resources.RecordSet
     zone: $.recordSetConfiguration.zone
-    name: $.recordSetConfiguration.hostname
+    name: generateHostname($.recordSetConfiguration.unitNamingPattern, 1)
 
 Forms:
   - instanceConfiguration:
@@ -45,10 +45,13 @@ Forms:
         - name: flavor
           type: flavor
           label: Instance flavor
+          requirements:
+            min_disk: 30
+            min_vcpus: 2
+            min_memory_mb: 2048
           description: >-
             Select your desired flavor. Consider that application performance
             will be affected by your choice.
-          required: false
         - name: keyPair
           type: keypair
           label: Key pair
@@ -56,65 +59,52 @@ Forms:
             Select the keypair to control access to instances. You can login
             to the instance using SSH with this keypair after the deployment
             has completed.
-          required: false
         - name: availabilityZone
           type: azone
           label: Availability zone
           description: >-
-            Select availability zone where the application would be created.
-            If you plan to use a volume for your data, this will need match
-            the Availability Zone of the volume.
-          required: false
-        - name: instname
-          type: string
-          label: Instance hostname
-          required: true
-          maxLength: 64
-          regexpValidator: '^[a-zA-z][-_\w]*$'
-          errorMessages:
-            invalid: Just letters, numbers, underscores and hyphens are allowed.
-          helpText: Just letters, numbers, underscores and hyphens are allowed.
-          description: >-
-            Specify a string, that will be used in instance hostname.
-            Just A-Z, a-z, 0-9, dash and underline are allowed.
-          initial: generateHostname('',1)
+            Select the Availability Zone where the application will be created.
+            If you plan to use a volume for your data, this will need to be in
+            the same AZ.
   - recordSetConfiguration:
       fields:
-        - name: license
+        - name: unitNamingPattern
           type: string
-          description: Apache License, Version 2.0
-          hidden: true
+          label: Host name
           required: false
+          maxLength: 64
+          regexpValidator: '^[a-zA-z][-\w]*$'
+          errorMessages:
+            invalid: Just letters, numbers and hyphens are allowed.
+          helpText: Just letters, numbers and hyphens are allowed.
+          description: >-
+            Specify a string, that will be used in instance hostname and possible
+            DNS entry. Just letters, numbers and hyphens are allowed.
         - name: zone
           type: zone
           label: DNS zone
           description: >-
             Select DNS zone if you'd like a DNS entry created for you.
-            Please note that a free Let's Encrypt HTTPS certificate will be
-            provisioned for you automatically if you do choose a zone.
+            A HTTPS certificate will be provisioned for you automatically if 
+            you choose a zone.
           required: false
-        - name: hostname
-          type: string
-          label: DNS hostname
-          regexpValidator: '^[a-z][a-z0-9-]*$'
-          errorMessages:
-            invalid: Just lower-case letters, numbers and hyphens are allowed.
-          helpText: Just lower-case letters, numbers and hyphens are allowed.
-          description: >-
-            Specify the DNS hostname for the instance. The fully qualified
-            domain name will be of the form [hostname].[zone].
-          required: false
-          initial: $.instanceConfiguration.instname.replace('_','-').toLower()
   - volumeConfiguration:
       fields:
-        - name: volumeID
+        - name: title
           type: string
-          label: Existing Volume ID
+          required: false
+          hidden: true
           description: >-
-            It is recommended to provide the ID of a pre-existing volume for
-            the data storage of this application.
-            If provided, all user data will be stored on this volume and will
-            persist even if the application is deleted.
+            It is recommended that provide a volume for the data storage of
+            this application. If provided, all user data will be stored on
+            this volume and will persist even if the application is deleted.
+        - name: volume
+          type: volume
+          label: Existing Volume
+          description: >-
+            You can create a new volume from the Project > Volumes > Volumes
+            tab and must be created in the same Availablity Zone as your
+            application.
           required: false
   - userConfiguration:
       fields:
@@ -122,10 +112,10 @@ Forms:
           type: string
           required: false
           hidden: true
-          descriptionTitle: User account configuration
           description: >-
             Details provided here will configure the user account for
-            application. You will be prompted for these when you start.
+            application, which is required to log into R-Studio and the
+            remote desktop or via SSH.
         - name: username
           type: string
           label: Username
@@ -140,4 +130,4 @@ Forms:
           description: >-
             Provide password for the new user account.
             Your password should have at least 7 characters, 1 capital letter,
-            1 digit and 1 specical character
+            1 digit and 1 specical character, except single quotes (').
