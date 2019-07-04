@@ -73,10 +73,10 @@ Forms:
           label: Host name
           required: false
           maxLength: 64
-          regexpValidator: '^[a-zA-z][-\w]*$'
+          regexpValidator: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
           errorMessages:
-            invalid: Just letters, numbers and hyphens are allowed.
-          helpText: Just letters, numbers and hyphens are allowed.
+            invalid: Just lowercase letters, numbers and hyphens are allowed.
+          helpText: Just lowercase letters, numbers and hyphens are allowed.
           description: >-
             Specify a string, that will be used in instance hostname and possible
             DNS entry. Just letters, numbers and hyphens are allowed.
@@ -119,10 +119,14 @@ Forms:
         - name: username
           type: string
           label: Username
+          regexpValidator: '^[a-z]([a-z0-9]*)?$'
+          errorMessages:
+            invalid: Only lowercase letters and numbers are allowed.
           descriptionTitle: Username
           description: >-
-            Provide a username for the new user account.
-            A user account with be created with this username.
+            Provide a username for the new user account to be created.
+            The username should be lowercase letters and numbers only, and must
+            start with a letter.
         - name: password
           type: password
           label: Password
@@ -130,4 +134,4 @@ Forms:
           description: >-
             Provide password for the new user account.
             Your password should have at least 7 characters, 1 capital letter,
-            1 digit and 1 specical character, except single quotes (').
+            1 digit and 1 specical char, except single quotes (').
