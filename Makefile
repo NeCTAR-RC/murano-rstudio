@@ -18,13 +18,12 @@ public:
 	murano package-update --is-public true $$package_id
 
 update-image-id:
-	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 18.04 LTS)..."
-	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio (Ubuntu 18.04 LTS)"); \
+	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 18.04 LTS Bionic)..."
+	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio (Ubuntu 18.04 LTS Bionic)"); \
 	if [ -z "$$image_id" ]; then \
 		echo "Image ID not found"; exit 1; \
 	fi; \
 	echo "Found ID: $$image_id"; \
-    eval $$(openstack image show $$image_id -f value -c properties); \
     sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml
 
 $(TARGET).zip:

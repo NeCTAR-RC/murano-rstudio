@@ -24,6 +24,7 @@ Application:
     type: au.org.nectar.RStudio
   username: $.userConfiguration.username
   password: $.userConfiguration.password
+  email: $.recordSetConfiguration.email
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
@@ -32,7 +33,7 @@ Application:
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
     volumes: switch($.volumeConfiguration.volume, $=''=>null, $!=null=>$customVolumeAttachment)
-    image: 7e5628b6-fde6-49c4-a10c-253f81115a03
+    image: b0d2f7c8-faa4-4c08-94a6-eade220bb0c5
   recordSet:
     ?:
       type: io.murano.resources.RecordSet
@@ -87,6 +88,17 @@ Forms:
             Select DNS zone if you'd like a DNS entry created for you.
             A HTTPS certificate will be provisioned for you automatically if 
             you choose a zone.
+          required: false
+        - name: email
+          type: string
+          label: Email address
+          regexpValidator: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+          errorMessages:
+            invalid: Must be a valid email address
+          descriptionTitle: Email address
+          description: >-
+            Provide an email address for HTTPS certificate notifications.
+            If not provided, HTTPS support will be disabled.
           required: false
   - volumeConfiguration:
       fields:

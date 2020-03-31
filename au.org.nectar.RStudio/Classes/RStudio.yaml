@@ -26,6 +26,8 @@ Properties:
     Contract: $.class(res:Instance).notNull()
   recordSet:
     Contract: $.class(res:RecordSet)
+  email:
+    Contract: $.string()
   username:
     Contract: $.string()
   password:
@@ -62,17 +64,22 @@ Methods:
             Then:
               - $._environment.reporter.report($this, 'Setting up DNS record')
               - $.recordSet.create([$ipaddr])
-              - $._environment.reporter.report($this, 'Setting up HTTPS configuration...')
-              - $fqdn: format('{hostname}.{zone}', hostname=>$.recordSet.name, zone=>regex('[.]$').replace($.recordSet.zone, ''))
-              - $email: std:User.getEnvironmentOwner().email
-              - $._environment.reporter.report($this, format('Certbot notifications email set to {email}', email=>$email))
-              - $fingerprint: $.enableHttpsCertbot($fqdn, $email)
-              - $proto: 'https'
-              - $._environment.reporter.report($this, format('HTTPS SHA256 Fingerprint {fp}', fp=>$fingerprint))
+              - If: $.email
+                Then:
+                  - $._environment.reporter.report($this, 'Setting up HTTPS configuration...')
+                  - $fqdn: format('{hostname}.{zone}', hostname=>$.recordSet.name, zone=>regex('[.]$').replace($.recordSet.zone, ''))
+                  - $._environment.reporter.report($this, format('Certbot notifications email set to {email}', email=>$.email))
+                  - $fingerprint: $.enableHttpsCertbot($fqdn, $.email)
+                  - $proto: 'https'
+                  - $._environment.reporter.report($this, format('HTTPS SHA256 Fingerprint {fp}', fp=>$fingerprint))
+                Else:
+                  - $._environment.reporter.report($this, 'Email not provided, not setting up HTTPS')
+                  - $proto: 'http'
+                  - $fqdn: $ipaddr
             Else:
-              - $proto: 'http'
-              - $fqdn: $ipaddr
-              - $._environment.reporter.report($this, 'HTTPS disabled')
+                - $._environment.reporter.report($this, 'DNS zone not provided, not setting up HTTPS')
+                - $proto: 'http'
+                - $fqdn: $ipaddr
           - $._environment.reporter.report($this, format('R-Studio is available at {pr}://{hn}', pr=>$proto, hn=>$fqdn))
           - $.setAttr(deployed, true)
 
