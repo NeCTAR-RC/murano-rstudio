@@ -74,8 +74,10 @@ set +x
 # Set password for user (and don't log it)
 PASSWORD="$2"
 echo "${USERNAME}:${PASSWORD}" | chpasswd
+
 # Nuke the password from the murano log file
-sed -i "s/${PASSWORD}/******/g" /var/log/murano-agent.log
-set -x
+# NOTE: We need to escape regex chars here or this statement will fail
+ESCAPED_PASSWORD=$(printf '%s\n' "$PASSWORD" | sed -e 's/[]\/$*.^[]/\\&/g')
+sed -i "s/${ESCAPED_PASSWORD}/******/g" /var/log/murano-agent.log
 
 # vim: ts=2 sw=2 :
