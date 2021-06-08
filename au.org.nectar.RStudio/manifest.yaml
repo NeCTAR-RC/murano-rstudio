@@ -16,7 +16,7 @@ FullName: au.org.nectar.RStudio
 Name: R-Studio
 Description: |
   R-Studio is an integrated development environment (IDE) for R.
-  Included is R 4.0.3 and R-Studio 1.3.1093 on Ubuntu 18.04 LTS (Bionic).
+  Included is R 4.1 and R-Studio 1.4 on Ubuntu 20.04 LTS (Focal).
   Please read the important information about this package at
   https://support.ehelp.edu.au/support/solutions/articles/6000164849
   An existing volume can be provided for storage of all user data, which
