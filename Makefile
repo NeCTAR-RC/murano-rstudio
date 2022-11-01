@@ -1,15 +1,18 @@
 TARGET=au.org.nectar.RStudio
-.PHONY: $(TARGET).zip
+.PHONY: package.zip
 
-all: $(TARGET).zip
+all: package.zip
 
-build: $(TARGET).zip
+build: package.zip
 
 clean:
-	rm -rf $(TARGET).zip
+	rm -rf package.zip
 
-upload: $(TARGET).zip
-	murano package-import -c "Big Data" --package-version 1.0 --exists-action u $(TARGET).zip
+upload: package.zip
+	murano package-import -c "Big Data" --package-version 1.0 --exists-action u package.zip
+
+check: package.zip
+	murano-pkg-check package.zip
 
 public:
 	@echo "Searching for $(TARGET) package ID..."
@@ -18,13 +21,13 @@ public:
 	murano package-update --is-public true $$package_id
 
 update-image-id:
-	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 18.04 LTS Bionic)..."
-	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio (Ubuntu 18.04 LTS Bionic)"); \
+	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 20.04 LTS Focal)..."
+	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio (Ubuntu 20.04 LTS Focal)"); \
 	if [ -z "$$image_id" ]; then \
 		echo "Image ID not found"; exit 1; \
 	fi; \
 	echo "Found ID: $$image_id"; \
     sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml
 
-$(TARGET).zip:
+package.zip:
 	rm -f $@; cd $(TARGET); zip ../$@ -r *; cd ..
