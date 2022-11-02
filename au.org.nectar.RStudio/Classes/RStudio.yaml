@@ -64,9 +64,9 @@ Methods:
               - $.recordSet.create([$ipaddr])
               - $._environment.reporter.report($this, 'Setting up HTTPS configuration...')
               - $email: std:User.getEnvironmentOwner().email
-              - $._environment.reporter.report($this, format('Certbot notifications email set to {email}', email=>$.email))
+              - $._environment.reporter.report($this, format('Certbot notifications email set to {email}', email=>$email))
               - $fqdn: format('{hostname}.{zone}', hostname=>$.recordSet.name, zone=>regex('[.]$').replace($.recordSet.zone, ''))
-              - $fingerprint: $.enableHttpsCertbot($fqdn, $.email)
+              - $fingerprint: $.enableHttpsCertbot($fqdn, $email)
               - $proto: 'https'
               - $._environment.reporter.report($this, format('HTTPS SHA256 Fingerprint {fp}', fp=>$fingerprint))
             Else:
