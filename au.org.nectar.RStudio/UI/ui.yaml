@@ -24,7 +24,6 @@ Application:
     type: au.org.nectar.RStudio
   username: $.userConfiguration.username
   password: $.userConfiguration.password
-  email: $.recordSetConfiguration.email
   instance:
     ?:
       type: io.murano.resources.LinuxMuranoInstance
@@ -89,17 +88,6 @@ Forms:
             A HTTPS certificate will be provisioned for you automatically if 
             you choose a zone.
           required: false
-        - name: email
-          type: string
-          label: Email address
-          regexpValidator: '^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-          errorMessages:
-            invalid: Must be a valid email address
-          descriptionTitle: Email address
-          description: >-
-            Provide an email address for HTTPS certificate notifications.
-            If not provided, HTTPS support will be disabled.
-          required: false
   - volumeConfiguration:
       fields:
         - name: title
@@ -140,7 +128,7 @@ Forms:
             The username should be lowercase letters and numbers only, and must
             start with a letter.
         - name: password
-          type: password
+          type: string
           label: Password
           descriptionTitle: Password
           description: >-

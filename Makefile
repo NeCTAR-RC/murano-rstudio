@@ -12,7 +12,7 @@ upload: package.zip
 	murano package-import -c "Big Data" --package-version 1.0 --exists-action u package.zip
 
 check: package.zip
-	murano-pkg-check package.zip
+	murano-pkg-check --ignore W011 package.zip
 
 public:
 	@echo "Searching for $(TARGET) package ID..."
