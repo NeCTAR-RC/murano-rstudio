@@ -32,7 +32,7 @@ Application:
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
     volumes: switch($.volumeConfiguration.volume, $=''=>null, $!=null=>$customVolumeAttachment)
-    image: f95b0241-68c7-4c09-a319-f6bf96e3cdc7
+    image: bd521135-5200-4af2-b3bd-a34c053be4f2
   recordSet:
     ?:
       type: io.murano.resources.RecordSet
