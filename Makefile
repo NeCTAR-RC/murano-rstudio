@@ -21,8 +21,8 @@ public:
 	murano package-update --is-public true $$package_id
 
 update-image-id:
-	@echo "Searching for latest image of NeCTAR R-Studio (Ubuntu 20.04 LTS Focal)..."
-	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio (Ubuntu 20.04 LTS Focal)"); \
+	@echo "Searching for latest image of NeCTAR R-Studio..."
+	@image_id=$$(openstack image show -f value -c id "NeCTAR R-Studio"); \
 	if [ -z "$$image_id" ]; then \
 		echo "Image ID not found"; exit 1; \
 	fi; \
