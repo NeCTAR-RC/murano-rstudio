@@ -124,14 +124,14 @@ Forms:
             invalid: Only lowercase letters and numbers are allowed.
           descriptionTitle: Username
           description: >-
-            Provide a username for the new user account to be created.
-            The username should be lowercase letters and numbers only, and must
+            Username for the new user account to be created.
+            The username must be lowercase letters and numbers only, and must
             start with a letter.
         - name: password
-          type: string
+          type: password
           label: Password
           descriptionTitle: Password
           description: >-
-            Provide password for the new user account.
-            Your password should have at least 7 characters, 1 capital letter,
-            1 digit and 1 specical char, except single quotes (').
+            Password for the new user account.
+            It must be at least 7 characters and contain letters, numbers and
+            special characters, except single quote (').
