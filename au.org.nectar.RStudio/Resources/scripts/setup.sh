@@ -19,7 +19,9 @@ if [ ! -z $DISK ] && [ -z $MOUNTPOINT ]; then
 
 	# Partition label
 	if [ "$(lsblk -n -o PARTTYPE $DISK)" == "" ]; then
-		parted $DISK mklabel msdos
+                # Use 'gpt' format because 'msdos' partitioning is
+                # limited to 2TB
+		parted $DISK mklabel gpt
 	fi
 
 	# Partition
