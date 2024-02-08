@@ -27,7 +27,7 @@ update-image-id:
 		echo "Image ID not found"; exit 1; \
 	fi; \
 	echo "Found ID: $$image_id"; \
-    sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml
+	sed -i "s/image:.*/image: $$image_id/g" $(TARGET)/UI/ui.yaml
 
 package.zip:
 	rm -f $@; cd $(TARGET); zip ../$@ -r *; cd ..
