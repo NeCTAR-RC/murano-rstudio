@@ -1,5 +1,5 @@
 TARGET=au.org.nectar.RStudio
-.PHONY: package.zip
+.PHONY: all build clean upload check public update-image-id package.zip
 
 all: package.zip
 
