@@ -19,7 +19,7 @@ Parameters:
   email: $email
 
 Body: |
-  return certbot('{0} {1}'.format(args.fqdn, args.email)).stdout
+  return certbot(args.fqdn + ' ' + args.email).stdout
 
 Scripts:
   certbot:

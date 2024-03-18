@@ -112,10 +112,13 @@ Forms:
           type: string
           required: false
           hidden: true
-          description: >-
+          description: |-
             Details provided here will configure the user account for
             application, which is required to log into R-Studio and the
             remote desktop or via SSH.
+            NOTE the password provided here is NOT considered secure as it is
+            stored in plain text. Please ensure this password is not reused
+            elsewhere.
         - name: username
           type: string
           label: Username
@@ -131,6 +134,6 @@ Forms:
           label: Password
           descriptionTitle: Password
           description: >-
-            Password for the new user account that must be at least 7
-            characters and contain lower and uppercase letters, numbers
-            and special characters, except single quote (').
+            Password must be at least 7 characters and contain both lower and
+            uppercase letters, numbers and special characters, except single
+            quote (').

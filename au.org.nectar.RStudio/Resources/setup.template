@@ -19,7 +19,7 @@ Parameters:
   username: $username
 
 Body: |
-  return setup('\'{0}\' \'{1}\''.format(args.username, args.password.replace("'", ""))).stdout
+  return setup('\'' + args.username + '\' \'' + args.password.replace("'", "") + '\'').stdout
 
 Scripts:
   setup:

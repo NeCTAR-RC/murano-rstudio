@@ -57,23 +57,23 @@ Methods:
           - $._environment.reporter.report($this, 'Instance created. Running setup...')
           - $.instance.agent.call($template, $resources)
           - $ipaddr: $.instance.ipAddresses.first()
-          - $._environment.reporter.report($this, format('SSH will be available at {username}@{ipaddr}', username=>$.username, ipaddr=>$ipaddr))
+          - $._environment.reporter.report($this, 'SSH will be available at ' + $.username + '@' + $ipaddr)
           - If: $.recordSet.zone and bool($.recordSet.name)
             Then:
               - $._environment.reporter.report($this, 'Setting up DNS record')
               - $.recordSet.create([$ipaddr])
               - $._environment.reporter.report($this, 'Setting up HTTPS configuration...')
               - $email: std:User.getEnvironmentOwner().email
-              - $._environment.reporter.report($this, format('Certbot notifications email set to {email}', email=>$email))
-              - $fqdn: format('{hostname}.{zone}', hostname=>$.recordSet.name, zone=>regex('[.]$').replace($.recordSet.zone, ''))
+              - $._environment.reporter.report($this, 'Certbot notifications email set to ' + $email)
+              - $fqdn: $.recordSet.name + '.' + regex('[.]$').replace($.recordSet.zone, '')
               - $fingerprint: $.enableHttpsCertbot($fqdn, $email)
               - $proto: 'https'
-              - $._environment.reporter.report($this, format('HTTPS SHA256 Fingerprint {fp}', fp=>$fingerprint))
+              - $._environment.reporter.report($this, 'HTTPS SHA256 Fingerprint ' + $fingerprint)
             Else:
                 - $._environment.reporter.report($this, 'DNS zone not provided, not setting up HTTPS')
                 - $proto: 'http'
                 - $fqdn: $ipaddr
-          - $._environment.reporter.report($this, format('R-Studio is available at {pr}://{hn}', pr=>$proto, hn=>$fqdn))
+          - $._environment.reporter.report($this, 'R-Studio is available at ' + $proto + '://' + $fqdn)
           - $.setAttr(deployed, true)
 
   enableHttpsCertbot:
