@@ -1,0 +1,12 @@
+# .yamllint
+extends: default
+
+rules:
+  document-start:
+    present: false  # Murano UI YAMLs often omit this
+
+  line-length: disable  # Murano templates often use long YAQL expressions
+
+  indentation:
+    spaces: 2
+    indent-sequences: true

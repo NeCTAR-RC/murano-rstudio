@@ -11,22 +11,15 @@
 #  under the License.
 
 FormatVersion: 2.0.0
-Version: 1.0.0
 Name: Certbot
 
 Parameters:
   fqdn: $fqdn
-  email: $email
 
 Body: |
-  return certbot(args.fqdn + ' ' + args.email).stdout
+  return certbot(args.fqdn).stdout
 
 Scripts:
   certbot:
     Type: Application
-    Version: 1.0.0
     EntryPoint: certbot.sh
-    Files: []
-    Options:
-      captureStdout: true
-      captureStderr: true

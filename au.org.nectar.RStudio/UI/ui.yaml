@@ -32,7 +32,7 @@ Application:
     keyname: $.instanceConfiguration.keyPair
     availabilityZone: $.instanceConfiguration.availabilityZone
     volumes: switch($.volumeConfiguration.volume, $=''=>null, $!=null=>$customVolumeAttachment)
-    image: 73e6328c-2ad9-4ab8-b685-59bd72397ee4
+    image: "NeCTAR R-Studio"
   recordSet:
     ?:
       type: io.murano.resources.RecordSet
@@ -85,7 +85,7 @@ Forms:
           label: DNS zone
           description: >-
             Select DNS zone if you'd like a DNS entry created for you.
-            A HTTPS certificate will be provisioned for you automatically if 
+            A HTTPS certificate will be provisioned for you automatically if
             you choose a zone.
           required: false
   - volumeConfiguration:

@@ -42,14 +42,14 @@ Methods:
         Then:
           - $._environment.reporter.report($this, 'Creating instance...')
           - $securityGroupIngress:
-            - ToPort: 80
-              FromPort: 80
-              IpProtocol: tcp
-              External: true
-            - ToPort: 443
-              FromPort: 443
-              IpProtocol: tcp
-              External: true
+              - ToPort: 80
+                FromPort: 80
+                IpProtocol: tcp
+                External: true
+              - ToPort: 443
+                FromPort: 443
+                IpProtocol: tcp
+                External: true
           - $._environment.securityGroupManager.addGroupIngress($securityGroupIngress)
           - $.instance.deploy()
           - $resources: new(sys:Resources)
@@ -63,16 +63,14 @@ Methods:
               - $._environment.reporter.report($this, 'Setting up DNS record')
               - $.recordSet.create([$ipaddr])
               - $._environment.reporter.report($this, 'Setting up HTTPS configuration...')
-              - $email: std:User.getEnvironmentOwner().email
-              - $._environment.reporter.report($this, 'Certbot notifications email set to ' + $email)
               - $fqdn: $.recordSet.name + '.' + regex('[.]$').replace($.recordSet.zone, '')
-              - $fingerprint: $.enableHttpsCertbot($fqdn, $email)
+              - $fingerprint: $.enableHttpsCertbot($fqdn)
               - $proto: 'https'
               - $._environment.reporter.report($this, 'HTTPS SHA256 Fingerprint ' + $fingerprint)
             Else:
-                - $._environment.reporter.report($this, 'DNS zone not provided, not setting up HTTPS')
-                - $proto: 'http'
-                - $fqdn: $ipaddr
+              - $._environment.reporter.report($this, 'DNS zone not provided, not setting up HTTPS')
+              - $proto: 'http'
+              - $fqdn: $ipaddr
           - $._environment.reporter.report($this, 'R-Studio is available at ' + $proto + '://' + $fqdn)
           - $.setAttr(deployed, true)
 
@@ -80,11 +78,9 @@ Methods:
     Arguments:
       - fqdn:
           Contract: $.string().notNull()
-      - email:
-          Contract: $.string().notNull()
     Body:
       - $resources: new(sys:Resources)
-      - $template: $resources.yaml('certbot.template').bind(dict(fqdn=>$fqdn, email=>$email))
+      - $template: $resources.yaml('certbot.template').bind(dict(fqdn=>$fqdn))
       - $._environment.reporter.report($this, 'Setting up Certbot...')
       - $fingerprint: $.instance.agent.call($template, $resources)
       - Return: $fingerprint
