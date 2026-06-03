@@ -16,8 +16,8 @@ FullName: au.org.nectar.RStudio
 Name: R-Studio
 Description: |
   R-Studio is an integrated development environment (IDE) for R.
-  Included is R 4.4 with lots of included modules, Shiny Server and
-  graphical desktop access, running on Ubuntu 22.04 LTS (Jammy).
+  Included is the latest R with lots of included modules, Shiny Server and
+  graphical desktop access, running on Ubuntu 24.04 LTS (Nible).
   Please read the important information about this package at
   https://support.ehelp.edu.au/support/solutions/articles/6000164849
   An existing volume can be provided for storage of all user data, which
